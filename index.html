@@ -144,7 +144,7 @@ label.chk input{width:18px;height:18px;accent-color:var(--accent)}
     <div class="meta" id="gInfo" style="margin-top:6px"></div>
   </div>
 </main>
-<footer class="meta" style="max-width:1100px;margin:0 auto;padding:0 20px 30px;text-align:center">Déchiffrage – tous instruments · Mickael Le Van · <span id="appver">version 3</span><br><span style="font-size:12px">Glyphes musicaux : police GNU FreeFont (FreeSerif). Sons de synthèse fabriqués par l'appli.</span></footer>
+<footer class="meta" style="max-width:1100px;margin:0 auto;padding:0 20px 30px;text-align:center">Déchiffrage – tous instruments · Mickael Le Van · <span id="appver">version 4</span><br><span style="font-size:12px">Glyphes musicaux : police GNU FreeFont (FreeSerif). Sons de synthèse fabriqués par l'appli.</span></footer>
 <script>
 'use strict';
 const $=id=>document.getElementById(id);
@@ -269,7 +269,6 @@ function startGame(g){
         if(step===0){if(g.prepare)at(t0,()=>g.prepare());if(g.countIn)g.countIn(t0,dur*bar);}
       }else{
         if(k===0){const it=item;at(t,()=>g.show(it));
-          const fr=g.revealFrac();if(fr>=0){at(t+it.d12*dur*fr,()=>g.reveal(it));}
           g.play(it,t,dur);}
         k++;
         if(k>=left){i++;item=g.items(i);left=item.d12;k=0;}
@@ -540,18 +539,22 @@ function makeScore(src,o){
 }
 
 // ===================== Dessin =====================
+// largeur des mesures fixée une fois pour toutes (mesure la plus chargée des 48 premières), pour que la partition garde la même taille
+const wOfN=n=>(n.showAcc?24:0)+14+Math.sqrt(n.d)*22+(n.dyn?10:0);
+function barWidth(get,from,nb){const tot={};for(let j=from;;j++){const n=get(j);if(n.bar>=nb)break;tot[n.bar]=(tot[n.bar]||0)+wOfN(n);}return Math.max(165,14+Math.max(0,...Object.values(tot)));}
 function drawStaff(get,curIdx,o){
   const C=CLEFS[INS.clef],BOT=C.BOT,MID=C.MID,GRP=MET.comp?1.5:1,names=o.names,DYN=o.dyn!=='none';
   const NL=2,NB=8,cur=get(curIdx),b0=Math.floor(cur.bar/4)*4,SPc=10;let BW=165;
   const firstIdx=(()=>{let i=curIdx;while(i>0&&get(i-1).bar>=b0)i--;return i;})();
   const lineKey=l=>{let j=firstIdx;while(true){const n=get(j);if(n.bar>=b0+4*l)return n.key;j++;}};
   const LK=[lineKey(0),lineKey(1)],prevKey=b0>0&&firstIdx>0?get(firstIdx-1).key:null;
-  let pMax=BOT+8,pMin=BOT,hasTxt=false;{let j=firstIdx;while(true){const n=get(j);if(n.bar>b0+NB-1)break;if(!n.rest){pMax=Math.max(pMax,n.p);pMin=Math.min(pMin,n.p);}if(n.txt)hasTxt=true;j++;}}
+  // hauteur fixe pour tout le morceau (tessiture et réglages), pour que l'écran ne saute pas
+  const [rlo,rhi]=curRange();let pMax=Math.max(BOT+8,spellPc(rhi).p+1),pMin=Math.min(BOT,spellPc(rlo).p-1),hasTxt=INS.fam==='corde'&&(o.art==='pizz'||o.art==='mix');
   const extraTop=Math.max(0,(pMax-(BOT+8))*SPc/2-10)+(hasTxt?28:0)+(o.bow?10:0)+(o.phr?16:0),extraBot=Math.max(0,(BOT-pMin)*SPc/2-10);
-  const nsig=Math.max(...LK.map(k=>Math.abs(k[3]))),left=62+nsig*10+(b0===0?22:0);
+  const nsig=o.nsig!==undefined?o.nsig:Math.max(...LK.map(k=>Math.abs(k[3]))),left=62+nsig*10+22; // place fixe : l'armure et le chiffrage ne font pas bouger la partition
   const XS={};{let j=firstIdx;const byBar={};while(true){const n=get(j);if(n.bar>b0+NB-1)break;(byBar[n.bar]=byBar[n.bar]||[]).push([j,n]);j++;}
     const wOf=n=>(n.showAcc?24:0)+14+Math.sqrt(n.d)*22+(n.dyn?10:0);
-    for(const k in byBar)BW=Math.max(BW,14+byBar[k].reduce((a,[j,n])=>a+wOf(n),0));
+    BW=o.BW||barWidth(get,0,48);
     for(const k in byBar){const L=byBar[k],w=L.map(([j,n])=>wOf(n)),tot=w.reduce((a,b)=>a+b,0),sc=(BW-14)/tot;
       let acc=6;L.forEach(([j,n],q)=>{acc+=(n.showAcc?24:0)*sc;XS[j]=acc+8;acc+=(w[q]-(n.showAcc?24:0))*sc;});}}
   const DYNH=DYN?34:0,NAMEH=names?26:0,LH=112+extraTop+extraBot+DYNH+NAMEH,T0=38+extraTop,W=left+4*BW+12,o2=[];
@@ -596,7 +599,7 @@ function drawStaff(get,curIdx,o){
     if(n.dyn)o2.push(`<text x="${x-8}" y="${dynY(top)}" font-size="18" font-weight="700" font-style="italic" font-family="Georgia,serif" fill="${col}">${n.dyn}</text>`);
     if(n.hpS)hpOpen={x:x+(n.dyn?16+n.dyn.length*8:0),line,type:n.hpS,top};
     if(n.hpE&&hpOpen){if(hpOpen.line===line)HP.push(Object.assign(hpOpen,{x2:x+14}));else{HP.push(Object.assign({},hpOpen,{x2:W-10}));HP.push({x:left,x2:x+14,type:hpOpen.type,top,cont:true});}hpOpen=null;}
-    if(n.txt){hasTxt=true;o2.push(`<text x="${x-8}" y="${top-extraTop+2}" font-size="14" font-style="italic" font-weight="700" font-family="Georgia,serif" fill="${col}">${n.txt}</text>`);}
+    if(n.txt){o2.push(`<text x="${x-8}" y="${top-extraTop+2}" font-size="14" font-style="italic" font-weight="700" font-family="Georgia,serif" fill="${col}">${n.txt}</text>`);}
     if(n.breath)o2.push(`<text x="${x+16}" y="${top-4}" font-size="22" font-weight="700" font-family="Georgia,serif" fill="${col}">,</text>`);
     const open=n.d>=2;
     o2.push(`<ellipse cx="${x}" cy="${y}" rx="6.6" ry="4.6" transform="rotate(-18 ${x} ${y})" ${open?`fill="none" stroke="${col}" stroke-width="2.4"`:`fill="${col}"`}/>`);
@@ -699,8 +702,7 @@ function renderOpts(){
   if(fam==='corde')h+=opt('gBow','Sens d\'archet',[['show','Affiché (⊓ tiré, V poussé)'],['hide','Caché']],'hide');
   h+=opt('gPhr','Liaisons de phrasé',[['show','Affichées (on ne respire pas dessous)'],['hide','Cachées']],'show');
   h+=opt('gDyn','Nuances',[['none','Aucune'],['simple','Simples (p, mf, f)'],['all','Toutes, avec crescendo et decrescendo']],'none')
-    +opt('gNames','Nom des notes',[['hide','Caché'],['show','Écrit sous chaque note (pour débuter)']],'hide')
-    +opt('gRev','Nom de la note en cours',[['0.5','affiché au milieu de la note'],['0','affiché tout de suite'],['-1','jamais affiché']],'0.5');
+    +opt('gNames','Nom des notes',[['hide','Caché'],['show','Écrit sous chaque note (pour débuter)']],'hide');
   $('gOpts').innerHTML=h;
   $('gOpts').querySelectorAll('select').forEach(s=>s.addEventListener('change',()=>{store.set('g-'+s.id,s.value);if(RUN.on)stopGame();if(['gSrc','gPiece','gMet'].includes(s.id)){renderOpts();return;}refresh();}));
   refresh();
@@ -743,18 +745,17 @@ function makeGame(){
     const br=val('gBr'),PL=br==='none'?0:br==='auto'?(fam==='vent'?(+val('gNiv')<=2?4:2):4):+br;
     src=genSource({lo,hi,K,mod:sel==='mod',niv:+val('gNiv'),maxi:+val('gInt'),att:val('gAtt'),PL});
   }
-  const get=makeScore(src,o);
+  o.nsig=!isRep()&&val('gSig')==='mod'?4:Math.abs(K[3]);
+  const get=makeScore(src,o);o.BW=barWidth(get,0,48);
   const draw=i=>{$('gStaff').innerHTML=drawStaff(get,i,o);};
   $('keyInfo').innerHTML='Tonalité : <b>'+esc(K[0])+'</b> ('+sigTxt(K[3])+')'+(isRep()?'':' · mesure '+MET.num+'/'+MET.den);
   return {title,items:get,
     first:()=>{let i=0;while(get(i).rest)i++;return get(i);},
     prepare:()=>draw(0),
     countIn:(t,barDur)=>{if(!$('gFirst').checked)return;let i=0;while(get(i).rest)i++;const f=get(i);tone(f.m-INS.T,t,.4,Math.min(barDur*.8,2.5));
-      at(t,()=>{$('gWhere').textContent='Première note : '+f.name;});},
+},
     show:n=>{draw(n.i);$('gLab').textContent='Mesure';$('gNow').className='now cur';$('gNow').textContent=n.bar+1;
-      $('gWhere').textContent=n.rest?'Silence':(val('gRev')==='0'?n.name:'');},
-    revealFrac:()=>+val('gRev'),
-    reveal:n=>{if(n.rest||n.tied)return;$('gWhere').textContent=n.name;},
+},
     play:(n,t,tick)=>{if(n.rest||n.tied||!$('gSnd').checked)return;
       let tot=n.d12;for(let j=n.i;get(j).tieNext;j++)tot+=get(j+1).d12;
       const q=tick*12,m=n.m-INS.T;let L=tot*tick*(n.inSl&&!n.slE?1.02:.9),v=n.vel||.5;
@@ -766,7 +767,7 @@ function makeGame(){
 function refresh(){
   if(RUN.on)return;
   try{GAME=makeGame();GAME.prepare();$('gLab').textContent='';$('gNow').className='now wait';$('gNow').textContent='Prêt ?';$('gWhere').textContent='';
-    const f=GAME.first();$('gNext').innerHTML=(GAME.title?'<b>'+GAME.title+'</b><br>':'')+'Pour commencer : <span class="nx">'+esc(f.name)+'</span>';$('gInfo').textContent='';}
+    $('gNext').innerHTML=GAME.title?'<b>'+GAME.title+'</b>':'';$('gInfo').textContent='';}
   catch(e){console.error(e);$('gStaff').innerHTML='';$('gNext').innerHTML='';}
 }
 function setTempo(t){TEMPO=t;const B=BPMS[CLICK];if(B[t])BPMV=B[t];store.set('tempo',t);store.set('bpm'+CLICK,BPMV);showTempo();}
