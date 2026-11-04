@@ -43,6 +43,6 @@ L'appli fait entendre le son réel et peut donner la première note pendant le d
 
 - Sons des instruments : [VSCO 2 Community Edition](https://github.com/sgossner/VSCO-2-CE) de Versilian Studios (domaine public, CC0) ; saxophones : banque FluidR3 ([midi-js-soundfonts](https://github.com/gleitz/midi-js-soundfonts), CC BY 3.0). Fichiers raccourcis, normalisés et convertis en mono.
 
-Glyphes musicaux : tracés de la police GNU FreeFont (FreeSerif), utilisés selon son exception de police. Code : licence MIT.
+Glyphes musicaux : tracés de la police GNU FreeFont (FreeSerif), utilisés selon son exception de police. Tout le reste du projet : © 2026 Mickael Le Van, tous droits réservés (voir `LICENSE`).
 
 © 2026 Mickael Le Van
