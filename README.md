@@ -1,12 +1,12 @@
 # Déchiffrage – tous instruments
 
-Une appli libre et gratuite de **lecture de notes au métronome** pour les instruments mélodiques : une partition générée au hasard, à la **tessiture de ton instrument**, en tenant compte de la **transposition** (clarinette, saxophones, trompette, cor, contrebasse).
+Une appli libre et gratuite de **lecture de notes au métronome** pour les instruments mélodiques : une partition générée au hasard, à la **tessiture de ton instrument**, en tenant compte de la **transposition** (clarinette, saxophones, trompette, cor, contrebasse, xylophone, glockenspiel).
 
 Même principe que la lecture de notes de la [Boîte à outils guitare](https://mlevan8395.github.io/toolbox-guitare/).
 
 ## Instruments
 
-Flûte, hautbois, clarinette en Si♭, saxophones soprano, alto, ténor et baryton, basson, cor en Fa, trompette en Si♭, trombone, violon, violoncelle, contrebasse. Trois tessitures pour chacun : débutant, moyen, toute la tessiture.
+Flûte, hautbois, clarinette en Si♭, saxophones soprano, alto, ténor et baryton, basson, cor en Fa, trompette en Si♭, trombone, violon, violoncelle, contrebasse, xylophone et glockenspiel (avec roulements et baguettes D/G). Trois tessitures pour chacun : débutant, moyen, toute la tessiture.
 
 ## Réglages
 
@@ -30,7 +30,7 @@ L'appli fait entendre le son réel et peut donner la première note pendant le d
 
 ## Répertoire
 
-- **Pour ton instrument** : Suites pour violoncelle n° 1 (prélude, menuet) et n° 3 (bourrée) de Bach (violoncelle, contrebasse, basson, trombone), Le Printemps de Vivaldi (violon, flûte, hautbois), Caprice n° 24 de Paganini (violon), Partita pour flûte seule de Bach (flûte, hautbois, saxophones), Concerto pour cor n° 4 de Mozart (cor), Méthode Arban (trompette, cor, trombone), Concertino de Weber (clarinette)
+- **Pour ton instrument** : Suites pour violoncelle n° 1 (prélude, menuet) et n° 3 (bourrée) de Bach (violoncelle, contrebasse, basson, trombone), Le Printemps de Vivaldi (violon, flûte, hautbois), Caprice n° 24 de Paganini (violon), Partita pour flûte seule de Bach (flûte, hautbois, saxophones), Concerto pour cor n° 4 de Mozart (cor), Méthode Arban (trompette, cor, trombone), Concertino de Weber (clarinette), Marche des soldats de bois de Tchaïkovski (xylophone, glockenspiel)
 - ★ Au clair de la lune, Ah ! vous dirai-je maman, Frère Jacques
 - ★★ Ode à la joie (Beethoven), Vive le vent (Pierpont), Douce nuit (Gruber), Lascia ch'io pianga (Haendel)
 - ★★★ Une petite musique de nuit (Mozart), Menuet en sol (Petzold), Greensleeves, Korobeïniki, Le Tilleul (Schubert), thème de la Sonate K. 331 (Mozart), début du Quatuor K. 80 (Mozart)

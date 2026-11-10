@@ -1,6 +1,6 @@
 // Déchiffrage : fonctionnement hors ligne. Page et manifeste : version en ligne d'abord, copie enregistrée sans connexion.
 // Si tu ajoutes un fichier, ajoute-le à FICHIERS et change VERSION.
-const VERSION='dechiffrage-6';
+const VERSION='dechiffrage-7';
 const FICHIERS=["./","index.html","manifest.webmanifest","icones/icone-192.png","icones/icone-512.png","icones/icone-maskable-512.png","icones/apple-touch-icon.png"];
 self.addEventListener('install',e=>{ e.waitUntil(caches.open(VERSION).then(c=>c.addAll(FICHIERS)).then(()=>self.skipWaiting())); });
 self.addEventListener('activate',e=>{ e.waitUntil(caches.keys().then(ks=>Promise.all(ks.filter(k=>k!==VERSION).map(k=>caches.delete(k)))).then(()=>self.clients.claim())); });

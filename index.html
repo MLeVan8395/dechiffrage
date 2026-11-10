@@ -145,7 +145,7 @@ label.chk input{width:18px;height:18px;accent-color:var(--accent)}
     <div class="meta" id="gInfo" style="margin-top:6px"></div>
   </div>
 </main>
-<footer class="meta" style="max-width:1100px;margin:0 auto;padding:0 20px 30px;text-align:center">Déchiffrage – tous instruments · Mickael Le Van · <span id="appver">version 5</span><br><span style="font-size:12px">Glyphes musicaux : police GNU FreeFont (FreeSerif). Sons : <a href="https://github.com/sgossner/VSCO-2-CE" target="_blank" rel="noopener">VSCO 2 Community Edition</a> (CC0) ; saxophones : FluidR3 GM (CC BY 3.0).</span></footer>
+<footer class="meta" style="max-width:1100px;margin:0 auto;padding:0 20px 30px;text-align:center">Déchiffrage – tous instruments · Mickael Le Van · <span id="appver">version 6</span><br><span style="font-size:12px">Glyphes musicaux : police GNU FreeFont (FreeSerif). Sons : <a href="https://github.com/sgossner/VSCO-2-CE" target="_blank" rel="noopener">VSCO 2 Community Edition</a> (CC0) ; saxophones : FluidR3 GM (CC BY 3.0).</span></footer>
 <script>
 'use strict';
 const $=id=>document.getElementById(id);
@@ -158,7 +158,7 @@ const rnd=a=>a[Math.floor(Math.random()*a.length)];
 function wpick(ws){let t=ws.reduce((a,w)=>a+w[1],0),r=Math.random()*t;for(const w of ws){r-=w[1];if(r<=0)return w[0];}return ws[0][0];}
 
 // ===================== Instruments =====================
-/* fam : vent ou corde ; clef : G (sol) ou F (fa) ; T : de combien de demi-tons l'écrit est au-dessus du son réel ; st : même chose en lettres ;
+/* fam : vent, corde ou perc (claviers de percussion) ; clef : G (sol) ou F (fa) ; T : de combien de demi-tons l'écrit est au-dessus du son réel ; st : même chose en lettres ;
    tessitures en hauteurs ÉCRITES (numéros MIDI, Do central = 60) : [débutant, moyen, complet] */
 const INSTR=[
  {id:'flute',n:'Flûte traversière',fam:'vent',clef:'G',T:0,st:0,r:[[64,76],[62,86],[60,96]]},
@@ -174,7 +174,9 @@ const INSTR=[
  {id:'trombone',n:'Trombone',fam:'vent',clef:'F',T:0,st:0,r:[[46,58],[40,65],[40,72]]},
  {id:'violon',n:'Violon',fam:'corde',clef:'G',T:0,st:0,r:[[62,76],[55,83],[55,93]]},
  {id:'violoncelle',n:'Violoncelle',fam:'corde',clef:'F',T:0,st:0,r:[[43,57],[36,62],[36,67]]},
- {id:'contrebasse',n:'Contrebasse',fam:'corde',clef:'F',T:12,st:7,r:[[40,52],[40,62],[40,67]]}
+ {id:'contrebasse',n:'Contrebasse',fam:'corde',clef:'F',T:12,st:7,r:[[40,52],[40,62],[40,67]]},
+ {id:'xylophone',n:'Xylophone',fam:'perc',clef:'G',T:-12,st:-7,r:[[60,72],[57,84],[53,96]]},
+ {id:'glockenspiel',n:'Glockenspiel',fam:'perc',clef:'G',T:-24,st:-14,r:[[67,79],[60,79],[55,84]]}
 ];
 const RANGES=[['0','Débutant'],['1','Moyen'],['2','Toute la tessiture']];
 const TRANS_TXT={2:'une seconde majeure plus bas',9:'une sixte majeure plus bas',14:'une neuvième majeure plus bas (une octave et un ton)',21:'une octave et une sixte majeure plus bas',7:'une quinte juste plus bas',12:'une octave plus bas'};
@@ -234,7 +236,7 @@ function tone(m,t,vel,dur,pizz){
 }
 // ===================== Sons d'instruments (échantillons) =====================
 // VSCO 2 Community Edition (domaine public, CC0) ; saxophones : FluidR3 (CC BY 3.0). Un dossier par instrument et par mode de jeu, un fichier par hauteur réelle.
-const SAMPLES={"basson":{"stac":[34,38,41,45,48,51,52,55,57,60,64,67,72],"sus":[34,37,41,45,46,48,55,60,63,68,69,72,75]},"clarinette":{"stac":[50,53,58,62,65,70,74,77,82,86,89],"sus":[50,53,58,62,65,70,74,77,82,86,90]},"contrebasse":{"pizz":[28,30,31,34,36,38,40,42,44,45,49,52,56,59],"stac":[28,30,31,34,36,38,40,42,44,45,49,52,56,59],"sus":[28,30,31,34,36,38,40,42,44,45,49,52,56,59],"trem":[28,31,36,40,44,52,56,59]},"cor":{"mute":[46,51,53,60,63,68,70,74,77],"stac":[33,36,39,43,46,50,53,57,60,74,77],"sus":[33,36,39,43,46,50,53,57,60,74,77]},"flute":{"stac":[69,72,76,81,84,88,93,96],"sus":[60,64,69,72,76,81,84,88,93,96]},"hautbois":{"stac":[58,62,65,70,74,77,82,86,89],"sus":[58,62,65,70,74,77,82,86,89]},"saxalto":{"stac":[47,50,53,56,59,62,65,68,71,74,77,80,83],"sus":[47,50,53,56,59,62,65,68,71,74,77,80,83]},"saxbar":{"stac":[34,37,40,43,46,49,52,55,58,61,64,67,70],"sus":[34,37,40,43,46,49,52,55,58,61,64,67,70]},"saxsop":{"stac":[54,57,60,63,66,69,72,75,78,81,84,87,90],"sus":[54,57,60,63,66,69,72,75,78,81,84,87,90]},"saxten":{"stac":[42,45,48,51,54,57,60,63,66,69,72,75,78],"sus":[42,45,48,51,54,57,60,63,66,69,72,75,78]},"trombone":{"stac":[34,41,46,53,58,62,65],"sus":[34,37,39,41,46,50,53,60,61,63,65]},"trompette":{"mute":[58,60,62,67,70,74,77,81],"stac":[53,57,60,63,65,67,70,74,77,81,84],"sus":[53,57,60,63,67,70,74,77,81,84]},"violon":{"pizz":[55,57,60,64,67,69,72,76,79,81,88,93,96],"stac":[55,57,60,64,67,69,72,76,79,81,84,88,91,93,96],"sus":[55,57,60,64,67,69,72,76,79,81,84,88,91,93,96],"trem":[55,57,60,64,67,69,72,76,79,81,84,88,91,96]},"violoncelle":{"pizz":[36,40,43,47,50,53,57,60,64,67,71,74,77],"stac":[36,40,43,47,50,53,57,60,64,67,71,74,77],"sus":[36,40,43,47,50,53,57,60,64,67,71,74,77],"trem":[36,40,43,47,50,53,57,59,60,64,67,71,74,77]}};
+const SAMPLES={"basson":{"stac":[34,38,41,45,48,51,52,55,57,60,64,67,72],"sus":[34,37,41,45,46,48,55,60,63,68,69,72,75]},"clarinette":{"stac":[50,53,58,62,65,70,74,77,82,86,89],"sus":[50,53,58,62,65,70,74,77,82,86,90]},"contrebasse":{"pizz":[28,30,31,34,36,38,40,42,44,45,49,52,56,59],"stac":[28,30,31,34,36,38,40,42,44,45,49,52,56,59],"sus":[28,30,31,34,36,38,40,42,44,45,49,52,56,59],"trem":[28,31,36,40,44,52,56,59]},"cor":{"mute":[46,51,53,60,63,68,70,74,77],"stac":[33,36,39,43,46,50,53,57,60,74,77],"sus":[33,36,39,43,46,50,53,57,60,74,77]},"flute":{"stac":[69,72,76,81,84,88,93,96],"sus":[60,64,69,72,76,81,84,88,93,96]},"glockenspiel":{"hit":[79,84,91,96,103,108]},"hautbois":{"stac":[58,62,65,70,74,77,82,86,89],"sus":[58,62,65,70,74,77,82,86,89]},"saxalto":{"stac":[47,50,53,56,59,62,65,68,71,74,77,80,83],"sus":[47,50,53,56,59,62,65,68,71,74,77,80,83]},"saxbar":{"stac":[34,37,40,43,46,49,52,55,58,61,64,67,70],"sus":[34,37,40,43,46,49,52,55,58,61,64,67,70]},"saxsop":{"stac":[54,57,60,63,66,69,72,75,78,81,84,87,90],"sus":[54,57,60,63,66,69,72,75,78,81,84,87,90]},"saxten":{"stac":[42,45,48,51,54,57,60,63,66,69,72,75,78],"sus":[42,45,48,51,54,57,60,63,66,69,72,75,78]},"trombone":{"stac":[34,41,46,53,58,62,65],"sus":[34,37,39,41,46,50,53,60,61,63,65]},"trompette":{"mute":[58,60,62,67,70,74,77,81],"stac":[53,57,60,63,65,67,70,74,77,81,84],"sus":[53,57,60,63,67,70,74,77,81,84]},"violon":{"pizz":[55,57,60,64,67,69,72,76,79,81,88,93,96],"stac":[55,57,60,64,67,69,72,76,79,81,84,88,91,93,96],"sus":[55,57,60,64,67,69,72,76,79,81,84,88,91,93,96],"trem":[55,57,60,64,67,69,72,76,79,81,84,88,91,96]},"violoncelle":{"pizz":[36,40,43,47,50,53,57,60,64,67,71,74,77],"stac":[36,40,43,47,50,53,57,60,64,67,71,74,77],"sus":[36,40,43,47,50,53,57,60,64,67,71,74,77],"trem":[36,40,43,47,50,53,57,59,60,64,67,71,74,77]},"xylophone":{"hit":[67,72,79,84,91,96,103,108]}};
 const BUF={},LOADING={};
 function loadInstrument(id,cb){
   const ac=ctx();if(!ac||!SAMPLES[id]||!/^https?:$/.test(location.protocol)){cb&&cb(false);return;}
@@ -248,7 +250,7 @@ function loadInstrument(id,cb){
 }
 const ART_SND={stac:['stac'],pizz:['pizz','stac'],trem:['trem','sus'],mute:['mute','sus'],sus:['sus']};
 function sample(m,art){const B=BUF[INS.id];if(!B||!B.ready)return null;
-  for(const a of ART_SND[art]||['sus']){const S=B[a];if(!S)continue;const ks=Object.keys(S).map(Number);if(!ks.length)continue;
+  for(const a of INS.fam==='perc'?['hit']:ART_SND[art]||['sus']){const S=B[a];if(!S)continue;const ks=Object.keys(S).map(Number);if(!ks.length)continue;
     const k=ks.reduce((b,x)=>Math.abs(x-m)<Math.abs(b-m)?x:b,ks[0]);if(Math.abs(k-m)<=6)return {buf:S[k],k,art:a};}
   return null;}
 /* p : {art (sus, stac, pizz, trem, mute), filt (tasto, pont, legno), flz, fp, harm} */
@@ -256,9 +258,9 @@ function playNote(m,t,vel,dur,p){
   p=p||{};const ac=ctx();if(!ac)return;
   const S=p.harm?null:sample(m,p.art||'sus');
   if(!S){tone(m,t,vel,dur,p.art==='pizz');return;}
-  cutAt(t);
+  if(INS.fam!=='perc')cutAt(t); // les lames résonnent : on ne coupe pas la note précédente
   const src=ac.createBufferSource();src.buffer=S.buf;src.playbackRate.value=Math.pow(2,(m-S.k)/12);
-  const long=S.art==='sus'||S.art==='mute'||S.art==='trem',bd=S.buf.duration/src.playbackRate.value;
+  const long=S.art==='sus'||S.art==='mute'||S.art==='trem',bd=S.buf.duration/src.playbackRate.value,perc=S.art==='hit';
   if(long&&dur>bd-.6){src.loop=true;src.loopStart=Math.min(1.4,S.buf.duration*.4);src.loopEnd=S.buf.duration-.5;}
   let node=src;
   if(p.filt){const f=ac.createBiquadFilter();if(p.filt==='tasto'){f.type='lowpass';f.frequency.value=1400;}else if(p.filt==='pont'){f.type='highpass';f.frequency.value=1500;}else{f.type='highpass';f.frequency.value=900;}node.connect(f);node=f;}
@@ -267,7 +269,7 @@ function playNote(m,t,vel,dur,p){
   g.gain.setValueAtTime(pk,t);
   if(p.fp){g.gain.setTargetAtTime(pk*.35,t+.08,.05);}
   if(p.flz){const lfo=ac.createOscillator(),lg=ac.createGain();lfo.frequency.value=24;lg.gain.value=pk*.45;lfo.connect(lg);lg.connect(g.gain);lfo.start(t);lfo.stop(t+dur+.3);}
-  const end=S.art==='stac'||S.art==='pizz'?t+Math.max(dur,Math.min(bd,S.art==='pizz'?1.5:.5)):t+dur;
+  const end=perc?t+Math.min(bd,2.6)-.15:S.art==='stac'||S.art==='pizz'?t+Math.max(dur,Math.min(bd,S.art==='pizz'?1.5:.5)):t+dur;
   g.gain.setTargetAtTime(0,end,S.art==='pizz'?.12:.07);
   node.connect(g);g.connect(MASTER);src.start(t);src.stop(end+.6);
   VOICES.push({g,start:t,end:end+.6});
@@ -487,7 +489,9 @@ const REP=[
  {id:"arban",t:"Méthode Arban, premières études (n° 2)",c:"Jean-Baptiste Arban",niv:1,met:'44',sig:0,min:false,ins:["trompette", "cor", "trombone"],
   n:"G4h G4h , | A4h A4h , | B4h B4h , | C5w / A4h A4h , | B4h B4h , | C5h C5h , | D5w / D5h D5h , | C5h C5h , | B4h B4h , | A4w / C5h C5h , | B4h B4h , | A4h A4h , | G4w /"},
  {id:"k495",t:"Concerto pour cor n° 4, rondo (partie de cor en fa)",c:"Wolfgang Amadeus Mozart",niv:4,met:'68',sig:-2,min:false,ins:["cor"],
-  n:"rq. rq F4e | Bb4e Bb4e Bb4e Bb4e Bb4e Bb4e | A4e C5e F5e F5e Eb5e C5e | Bb4e Bb4e Bb4e Bb4e A4e Bb4e | C5e F4e F4e F4q F4e / Bb4e Bb4e Bb4e Bb4e Bb4e Bb4e | A4e C5e F5e F5e Eb5e C5e | D5e F5e Bb4e C5e Bb4e C5e | Bb4e Bb3e Bb3e Bb3q re /"}
+  n:"rq. rq F4e | Bb4e Bb4e Bb4e Bb4e Bb4e Bb4e | A4e C5e F5e F5e Eb5e C5e | Bb4e Bb4e Bb4e Bb4e A4e Bb4e | C5e F4e F4e F4q F4e / Bb4e Bb4e Bb4e Bb4e Bb4e Bb4e | A4e C5e F5e F5e Eb5e C5e | D5e F5e Bb4e C5e Bb4e C5e | Bb4e Bb3e Bb3e Bb3q re /"},
+ {id:"soldats",t:"Marche des soldats de bois (Album pour enfants, op. 39)",c:"Piotr Ilitch Tchaïkovski",niv:3,met:'24',sig:2,min:false,ins:["xylophone","glockenspiel"],
+  n:"D5e re D5e re | B4e. A#4s B4e rs C#5s | D5e re D5e re | B4e. A#4s B4e rs C#5s | D5e re E5e re | F#5e re F#5e re | G5e rs F#5s E5e rs D5s | E5e rq. / D5e re D5e re | B4e. A#4s B4e rs C#5s | D5e re D5e re | B4e. A#4s B4e rs C#5s | D5e re E5e re | F#5e re F#5e re | E5e rs D5s C#5e rs B4s | A4e rq. /"}
 ];
 REP.sort((a,b)=>a.niv-b.niv);
 const DUR={w:4,h:2,q:1,e:.5,s:.25,t:1/3};
@@ -527,6 +531,7 @@ function repSource(pp,K,oc,breath){
 // ===================== Articulations, archet, nuances =====================
 const BRASS=['cor','trompette','trombone'];
 function artChoices(){const v=INS.fam==='vent';
+  if(INS.fam==='perc')return [['none','Aucune'],['acc','Accents, marcato, sf, fp'],['roul','Roulements'],['orn','Ornements : trilles, mordants, gruppettos'],['mix','Tout mélangé']];
   if(v)return [['none','Aucune'],['lie','Liaisons (legato)'],['stacc','Piqué (staccato)'],['stacciss','Staccatissimo'],['coule','Coulé-détaché (liées et piquées)'],['acc','Accents, marcato, sf, fp'],['ten','Tenuto, louré, sostenuto'],['orn','Ornements : trilles, mordants, gruppettos'],['flz','Flatterzunge']]
     .concat(BRASS.includes(INS.id)?[['sourd','Sourdine (con sord., senza sord.)']]:[]).concat(INS.id==='cor'?[['bouche','Sons bouchés (+)']]:[]).concat([['mix','Tout mélangé']]);
   return [['none','Aucune (détaché)'],['lie','Liaisons (plusieurs notes par archet)'],['stacc','Piqué / spiccato'],['mart','Martelé et accents'],['loure','Louré (porté)'],['acc','Accents, sf, fp'],['pizz','Pizzicato et arco'],['modes','Sul tasto, sul ponticello, col legno'],['trem','Trémolo'],['harm','Sons harmoniques'],['orn','Ornements : trilles, mordants, gruppettos'],['mix','Tout mélangé']];}
@@ -537,6 +542,8 @@ function slurGroup(g,ten){if(g.length<2)return false;g[0].slS=true;g[g.length-1]
 function chunk(run,sizes){const out=[];let i=0;while(i<run.length){const s=rnd(sizes);out.push(run.slice(i,i+s));i+=s;}return out;}
 function artBar(items,mode,fam,st){
   if(mode==='none')return;
+  if(fam==='perc'&&mode==='mix'){mode=rnd(['none','acc','acc','roul','orn']);}
+  if(mode==='roul')mode='trem';
   if(mode==='mix'){if(st.mixLeft>0&&st.mixMode){st.mixLeft--;mode=st.mixMode;}else{mode=rnd(fam==='corde'?['none','lie','lie','stacc','mart','loure','acc','orn','trem','modes','pizz']:['none','lie','lie','stacc','stacciss','coule','acc','ten','orn'].concat(BRASS.includes(INS.id)?['sourd']:[]));
     if(st.sect&&st.sect!==mode&&['pizz','modes','sourd'].includes(mode))mode='none';
     if(['pizz','modes','sourd'].includes(mode)){st.mixMode=mode;st.mixLeft=rnd([1,3]);}else st.mixMode=null;}}
@@ -548,7 +555,7 @@ function artBar(items,mode,fam,st){
   else if(mode==='coule')runs.forEach(r=>{const sh=r.filter(n=>n.d<=.5);if(sh.length>=3)chunk(r,MET.comp?[3]:[4]).forEach(g=>{if(g.length>=3){slurGroup(g.slice(0,2));g.slice(2).forEach(n=>{if(ok(n))n.art='stacc';});}else slurGroup(g);});
     else chunk(r,[2]).forEach(g=>{if(Math.random()<.7)slurGroup(g);});});
   else if(mode==='acc')items.forEach(n=>{if(n.rest||n.tied)return;const r=Math.random();
-    if(n.d>=1&&r<.18)n.sf=rnd(['sf','sfz','fp']);else if(n.d>=.5&&r<.5)n.art=n.d>=1&&Math.random()<.4&&fam==='vent'?'marc':'acc';});
+    if(n.d>=1&&r<.18)n.sf=rnd(['sf','sfz','fp']);else if(n.d>=.5&&r<.5)n.art=n.d>=1&&Math.random()<.4&&fam!=='corde'?'marc':'acc';});
   else if(mode==='stacciss')items.forEach(n=>{if(!n.rest&&ok(n)&&n.d<=1&&Math.random()<.6)n.art='stacciss';});
   else if(mode==='orn')items.forEach(n=>{if(n.rest||n.tied||n.inSl)return;const r=Math.random();
     if(n.d>=1&&r<.3)n.orn='tr';else if(n.d>=1&&r<.45)n.orn='turn';else if(n.d>=.5&&r<.6)n.orn='mord';});
@@ -578,6 +585,9 @@ function sectTxt(items,st){items.forEach(n=>{if(n.rest)return;if(SECT.includes(n
   const s=n.pizz?'pizz.':n.mute?'con sord.':n.filt?{tasto:'sul tasto',pont:'sul pont.',legno:'col legno'}[n.filt]:'normal',prev=st.sectPrev||'normal';
   if(s!==prev){const t=s!=='normal'?s:prev==='pizz.'?'arco':prev==='con sord.'?'senza sord.':'ord.';n.txt=n.txt?t+' '+n.txt:t;}
   st.sectPrev=s;});}
+// Baguettes : main droite (D) et main gauche (G) en alternance, on repart de la droite après un silence sur le temps
+function stickBar(items,st){items.forEach(n=>{if(n.rest){st.afterRest=true;return;}if(n.tied)return;
+  st.h=(!st.h||(st.afterRest&&n.beat%1===0))?'D':st.h==='D'?'G':'D';n.stick=st.h;st.afterRest=false;});}
 function bowBar(items,st){ // tiré (⊓) et poussé (V) : une note ou une liaison par coup d'archet
   items.forEach(n=>{
     if(n.rest){st.afterRest=true;return;}
@@ -621,6 +631,7 @@ function makeScore(src,o){
     artBar(items,o.art,INS.fam,st.art);
     sectTxt(items,st);
     if(INS.fam==='corde'&&o.bow)bowBar(items,st.bow);
+    if(INS.fam==='perc'&&o.bow)stickBar(items,st.bow);
     dynBar(items,B,o.dyn,st.dyn,b);
     phraseBar(items,B,st.ph);
     items.forEach(n=>{n.name=n.rest?'':LET[n.L]+accTxt(n.a);n.i=out.length;out.push(n);});
@@ -683,7 +694,7 @@ function drawStaff(get,curIdx,o){
     if(n.orn)ORNS.push({x,y,p:n.p,orn:n.orn,col,k:gk(n),top,d:n.d});
     if(n.sf)o2.push(`<text x="${x-8}" y="${dynY(top)}" font-size="16" font-weight="700" font-style="italic" font-family="Georgia,serif" fill="${col}">${n.sf}</text>`);
     if(n.trem||n.flz){const up=n.p<MID,sx=n.d>=4?x:up?x+6:x-6,yb=n.d>=4?y-14:up?y-18:y+20;for(let q=0;q<3;q++)o2.push(`<line x1="${sx-5}" y1="${yb+4-q*6}" x2="${sx+5}" y2="${yb-2-q*6}" stroke="${col}" stroke-width="2.4"/>`);}
-    if(n.bow)BOWS.push({x,y,p:n.p,bow:n.bow,col,k:gk(n),top,d:n.d,art:n.art});
+    if(n.bow||n.stick)BOWS.push({x,y,p:n.p,bow:n.bow||n.stick,col,k:gk(n),top,d:n.d,art:n.art});
     if(o.phr){if(ph&&ph.line!==line){PH.push(Object.assign(ph,{toEdge:true}));ph={line,top,pts:[],cont:true};}
       if(n.phS&&!ph)ph={line,top,pts:[]};
       if(ph){ph.pts.push({x,yt:phTop(n,y)});if(n.phE){PH.push(ph);ph=null;}}}
@@ -754,7 +765,7 @@ function drawStaff(get,curIdx,o){
     o2.push(`<path d="M${x1} ${y0} Q ${(x1+x2)/2} ${c} ${x2} ${y0}" fill="none" stroke="${s.col}" stroke-width="1.7"/>`);});
   // sens d'archet : toujours au-dessus
   BOWS.forEach(Q=>{const S=stemOf(Q),ay=artY[Q.x+':'+Q.top];let yb=Math.min(S.up?S.top-12:Q.y-16,Q.top-10);if(ay!==undefined&&ay!==null)yb=Math.min(yb,ay-10);
-    o2.push(Q.bow==='down'?`<path d="M${Q.x-5} ${yb} V${yb-8} H${Q.x+5} V${yb}" fill="none" stroke="${Q.col}" stroke-width="1.6"/><line x1="${Q.x-5}" y1="${yb-8}" x2="${Q.x+5}" y2="${yb-8}" stroke="${Q.col}" stroke-width="3.2"/>`:`<path d="M${Q.x-5} ${yb-9} L${Q.x} ${yb} L${Q.x+5} ${yb-9}" fill="none" stroke="${Q.col}" stroke-width="1.6"/>`);});
+    o2.push(Q.bow==='D'||Q.bow==='G'?`<text x="${Q.x}" y="${yb}" font-size="12" font-weight="700" text-anchor="middle" font-family="var(--body)" fill="${Q.col}">${Q.bow}</text>`:Q.bow==='down'?`<path d="M${Q.x-5} ${yb} V${yb-8} H${Q.x+5} V${yb}" fill="none" stroke="${Q.col}" stroke-width="1.6"/><line x1="${Q.x-5}" y1="${yb-8}" x2="${Q.x+5}" y2="${yb-8}" stroke="${Q.col}" stroke-width="3.2"/>`:`<path d="M${Q.x-5} ${yb-9} L${Q.x} ${yb} L${Q.x+5} ${yb-9}" fill="none" stroke="${Q.col}" stroke-width="1.6"/>`);});
   // soufflets
   HP.forEach(h=>{const y=dynY(h.top)-6,x1=h.x+(h.cont?0:4),x2=Math.max(h.x2,x1+44);
     o2.push(h.type==='<'?`<path d="M${x2} ${y-6} L${x1} ${y} L${x2} ${y+6}" fill="none" stroke="currentColor" stroke-width="1.5"/>`:`<path d="M${x1} ${y-6} L${x2} ${y} L${x1} ${y+6}" fill="none" stroke="currentColor" stroke-width="1.5"/>`);});
@@ -802,9 +813,11 @@ function renderOpts(){
     +opt('gInt','Intervalle maximal',LINTO,2)
     +opt('gBr','Silences (respirations)',[['auto',fam==='vent'?'Toutes les 2 mesures (vents)':'Toutes les 4 mesures'],['2','Toutes les 2 mesures'],['4','Toutes les 4 mesures'],['none','Pas de silence obligatoire']],'auto');}
   h+=`<span id="battueBox">${opt('gBat','Métronome en 6/8',[['18','2 temps (à la noire pointée)'],['6','6 croches (à la croche)']],'18')}</span>`;
-  h+=opt(fam==='corde'?'gArtC':'gArtV','Articulations et modes de jeu',artChoices(),'none');
+  h+=opt(fam==='corde'?'gArtC':fam==='perc'?'gArtP':'gArtV','Articulations et modes de jeu',artChoices(),'none');
   if(fam==='corde')h+=opt('gBow','Sens d\'archet',[['show','Affiché (⊓ tiré, V poussé)'],['hide','Caché']],'hide');
-  h+=opt('gPhr','Liaisons de phrasé',[['show','Affichées (on ne respire pas dessous)'],['hide','Cachées']],'show');
+  if(fam==='perc')h+=opt('gStick','Baguettes',[['show','Affichées (D droite, G gauche)'],['hide','Cachées']],'hide');
+  // claviers de percussion : pas de liaisons de phrasé par défaut (les lames ne tiennent pas le son)
+  h+=fam==='perc'?opt('gPhrP','Liaisons de phrasé',[['show','Affichées'],['hide','Cachées']],'hide'):opt('gPhr','Liaisons de phrasé',[['show','Affichées (on ne respire pas dessous)'],['hide','Cachées']],'show');
   h+=opt('gDyn','Nuances',[['none','Aucune'],['simple','Simples (p, mf, f)'],['all','Toutes, avec crescendo et decrescendo']],'none')
     +opt('gNames','Nom des notes',[['hide','Caché'],['show','Écrit sous chaque note (pour débuter)']],'hide');
   $('gOpts').innerHTML=h;
@@ -824,6 +837,8 @@ function renderInstr(){
   const nm=n=>LET[n.L]+accTxt(n.a);
   let t='De <b>'+nm(a)+'</b> à <b>'+nm(b)+'</b>'+(INS.T?' (notes écrites)':'')+', en clé de '+(INS.clef==='F'?'fa':'sol')+'.';
   if(INS.T===12)t+='<br><span class="trans">Sonne une octave plus bas que l\'écrit</span>';
+  else if(INS.T===-12)t+='<br><span class="trans">Sonne une octave plus haut que l\'écrit</span>';
+  else if(INS.T===-24)t+='<br><span class="trans">Sonne deux octaves plus haut que l\'écrit</span>';
   else if(INS.T)t+='<br><span class="trans">Instrument transpositeur : sonne '+TRANS_TXT[INS.T]+'</span><br><span class="meta">L\'appli fait entendre le son réel.</span>';
   else t+='<br><span class="meta">Instrument en ut : la note écrite est la note entendue.</span>';
   $('rgTxt').innerHTML=t;
@@ -835,7 +850,7 @@ let GAME=null;
 function makeGame(){
   applyMeter();
   const [lo,hi]=curRange(),fam=INS.fam;
-  const o={phr:val('gPhr')!=='hide',art:val(fam==='corde'?'gArtC':'gArtV')||'none',bow:fam==='corde'&&val('gBow')==='show',dyn:val('gDyn')||'none',names:val('gNames')==='show',swing:SWING&&!MET.comp};
+  const o={phr:val(fam==='perc'?'gPhrP':'gPhr')!=='hide',art:val(fam==='corde'?'gArtC':fam==='perc'?'gArtP':'gArtV')||'none',bow:(fam==='corde'&&val('gBow')==='show')||(fam==='perc'&&val('gStick')==='show'),dyn:val('gDyn')||'none',names:val('gNames')==='show',swing:SWING&&!MET.comp};
   let src,title='',K;
   if(isRep()){
     const P=REP.find(x=>x.id===val('gPiece'));if(!P)throw new Error('pas de morceau');const pp=PARSED[P.id],s=val('gSigR');
@@ -880,6 +895,7 @@ function makeGame(){
         const f=Math.min(.09,q/4),seq=n.orn==='tr'?null:n.orn==='mord'?[m,dn]:[up,m,dn];
         if(n.orn==='tr'){const nn=Math.max(4,Math.floor(L*.85/.07));for(let k=0;k<nn;k++)playNote(k%2?up:m,t+k*.07,v*(k?.8:1),.08,{art:'sus'});playNote(m,t+nn*.07,v*.8,Math.max(.1,L-nn*.07),P);return;}
         seq.forEach((x,k)=>playNote(x,t+k*f,v*(k?.8:1),f*.95,{art:'sus'}));playNote(m,t+seq.length*f,v*.85,Math.max(.1,L-seq.length*f),P);return;}
+      if(INS.fam==='perc'&&n.trem){const dt=.065,nn=Math.max(2,Math.floor(L/dt));for(let k=0;k<nn;k++)playNote(m,t+k*dt,v*(k%2?.7:.85)*(k?1:1.15),dt,P);return;}
       playNote(m,t,v,L,P);}};
 }
 function refresh(){
